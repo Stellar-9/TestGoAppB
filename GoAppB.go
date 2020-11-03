@@ -15,10 +15,11 @@ import (
 var targetURL = os.Getenv("URL")
 
 type Example struct {
+	ID    int64  `json:"id"`
 	Greet string `json:"greet"`
 }
 
-//var greet []Example
+var greet []Example
 
 func LogInformation(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -69,16 +70,17 @@ func hellouniverse(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	responseString := string(body)
+	responseString := (string(body))
+
+	//Hello := Example{Greet: fmt.Sprintf("Greeting to World: %s", responseString)}
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	if r.Method == "OPTIONS" {
 		w.Header().Set("Access-Control-Allow-Headers", "Authorization")
 	} else {
-
-		Hello := Example{Greet: fmt.Sprintf("Greeting to World: %s", responseString)}
-
+		greet = append(greet, Example{ID: 1, Greet: "Greeting to World: " + responseString})
 		w.Header().Set("Content-Type", "applicaton/json")
-		json.NewEncoder(w).Encode(Hello)
+		json.NewEncoder(w).Encode(greet)
 
 	}
 }
